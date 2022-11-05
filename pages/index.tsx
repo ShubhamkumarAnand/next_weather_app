@@ -14,7 +14,7 @@ export default function Home() {
 		console.log('Button clicked');
 		try {
 			const serverResponse = await fetch(
-				`https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${API_KEY}&uints=imperial`
+				`https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${API_KEY}&units=metric`
 			);
 			console.log(serverResponse);
 
@@ -80,7 +80,7 @@ export default function Home() {
 										width='100'
 										height='100'
 									/>
-									<Text>Currently {weatherData.main.temp}</Text>
+									<Text>Currently {weatherData.main.temp} &deg; C</Text>
 								</Group>
 							</>
 						) : null}
