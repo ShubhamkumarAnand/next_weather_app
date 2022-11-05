@@ -1,14 +1,28 @@
 import { Button, Group, Paper, Text, TextInput } from '@mantine/core';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useState } from 'react';
 import styles from '../styles/Home.module.css';
 
+const API_KEY = '8757c55d2c1bec5973300a10ac2b863c';
+
 export default function Home() {
 	const [cityInput, setCityInput] = useState('');
+	const [weatherData, setWeatherData] = useState<any>({});
 
 	async function getWeatherData() {
 		console.log('Button clicked');
-		// https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+		try {
+			const serverResponse = await fetch(
+				`https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${API_KEY}&uints=imperial`
+			);
+			console.log(serverResponse);
+
+			const data = await serverResponse.json();
+			console.log(data);
+			if (data?.code === '400') throw data;
+			setWeatherData(data);
+		} catch (error) {}
 	}
 	return (
 		<div className={styles.container}>
@@ -54,6 +68,22 @@ export default function Home() {
 								Get Weather
 							</Button>
 						</Group>
+						{Object.keys(weatherData).length !== 0 ? (
+							<>
+								<Group position='apart'>
+									<Text>{weatherData.name} Weather</Text>
+								</Group>
+								<Group position='apart'>
+									<Image
+										alt='icon'
+										src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
+										width='100'
+										height='100'
+									/>
+									<Text>Currently {weatherData.main.temp}</Text>
+								</Group>
+							</>
+						) : null}
 					</Paper>
 				</div>
 			</main>
